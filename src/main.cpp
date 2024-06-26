@@ -81,13 +81,7 @@ class $modify (PlayLayer){
 		m_fields->current_timestamp = current_timestamp;
 		bool forceEnabled = Mod::get()->getSettingValue<bool>("force-enable");
 		bool saveDataToggle = saveData.base() == nullptr ? false : saveData->toggled;
-		std::cout<< current_timestamp << std::endl;
-		if(saveData.base() != nullptr){
-			std::cout << saveData->saved_time << std::endl;
-		}
 
-
-		//optimize by only doing this if it appears to be wrong.
 		if (saveData != vec.end() && saveData->saved_time != current_timestamp) {
 			saveData->saved_time = current_timestamp;
 		}
@@ -106,7 +100,6 @@ class $modify (PlayLayer){
 	}
 	void onQuit(){
 		m_level->m_timestamp = m_fields->current_timestamp;
-		std::cout << "setting to :" << m_fields->current_timestamp << std::endl;
 		PlayLayer::onQuit();
 	}
 };
@@ -126,11 +119,9 @@ class $modify (EditLevelLayer){
         auto checkbox = CCMenuItemExt::createTogglerWithStandardSprites(
           0.75,
             [this, levelKey](auto){
-				std::cout << levelKey << std::endl;
 				auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
 				auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level); });
 					if (saveData != vec.end()) {
-						std::cout << "hi" << std::endl;
 						saveData->toggled = !saveData->toggled;
 					}
 					else {
@@ -142,7 +133,7 @@ class $modify (EditLevelLayer){
 					}
 				Mod::get()->setSavedValue("toggle-save-data", vec);
 			 });
-		checkbox->toggle(saveData.base() == nullptr ? false : saveData->toggled );
+		checkbox->toggle(saveData == vec.end() ? false : saveData->toggled );
 		
 
 		auto label = CCLabelBMFont::create("2.1", "bigFont.fnt");
@@ -173,11 +164,9 @@ class $modify (LevelInfoLayer){
         auto checkbox = CCMenuItemExt::createTogglerWithStandardSprites(
           0.75,
             [this, levelKey](auto){
-				std::cout << levelKey << std::endl;
 				auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
 				auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level); });
 					if (saveData != vec.end()) {
-						std::cout << "hi" << std::endl;
 						saveData->toggled = !saveData->toggled;
 					}
 					else {
