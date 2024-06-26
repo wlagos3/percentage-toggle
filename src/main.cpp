@@ -70,8 +70,6 @@ class $modify (PlayLayer){
 		int current_timestamp;
 	};
 
-	//rename these values
-
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects){
 		if(!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		gd::string levelKey = getLevelKey(level);
@@ -80,7 +78,7 @@ class $modify (PlayLayer){
 		int current_timestamp = level->m_timestamp != 0 ? level->m_timestamp : saveData->saved_time; 
 		m_fields->current_timestamp = current_timestamp;
 		bool forceEnabled = Mod::get()->getSettingValue<bool>("force-enable");
-		bool saveDataToggle = saveData.base() == nullptr ? false : saveData->toggled;
+		bool saveDataToggle = saveData == vec.end() ? false : saveData->toggled;
 
 		if (saveData != vec.end() && saveData->saved_time != current_timestamp) {
 			saveData->saved_time = current_timestamp;
@@ -178,7 +176,7 @@ class $modify (LevelInfoLayer){
 					}
 				Mod::get()->setSavedValue("toggle-save-data", vec);
 			 });
-		checkbox->toggle(saveData.base() == nullptr ? false : saveData->toggled );
+		checkbox->toggle(saveData == vec.end() ? false : saveData->toggled );
 		
 
 		auto label = CCLabelBMFont::create("2.1", "bigFont.fnt");
