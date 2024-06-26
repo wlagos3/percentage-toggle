@@ -75,8 +75,8 @@ class $modify (PlayLayer){
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects){
 		if(!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
 		gd::string levelKey = getLevelKey(level);
-		std::vector<ToggleSaveData> vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
-		std::__wrap_iter<ToggleSaveData*> saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level); });
+		auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
+		auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level); });
 		int current_timestamp = level->m_timestamp != 0 ? level->m_timestamp : saveData->saved_time; 
 		m_fields->current_timestamp = current_timestamp;
 		bool forceEnabled = Mod::get()->getSettingValue<bool>("force-enable");
