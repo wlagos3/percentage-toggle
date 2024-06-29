@@ -72,15 +72,16 @@ class $modify (PlayLayer){
 
 	bool init(GJGameLevel* level, bool useReplay, bool dontCreateObjects){
 		if(!PlayLayer::init(level, useReplay, dontCreateObjects)) return false;
-		gd::string levelKey = getLevelKey(level);
+		std::string levelKey = getLevelKey(level);
 		auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
 		auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level); });
-		int current_timestamp = level->m_timestamp != 0 ? level->m_timestamp : saveData->saved_time; 
+		bool saveDataIsNull = saveData == vec.end();
+		int current_timestamp = level->m_timestamp != 0 || saveDataIsNull ? level->m_timestamp : saveData->saved_time; 
 		m_fields->current_timestamp = current_timestamp;
 		bool forceEnabled = Mod::get()->getSettingValue<bool>("force-enable");
-		bool saveDataToggle = saveData == vec.end() ? false : saveData->toggled;
+		bool saveDataToggle = saveDataIsNull ? false : saveData->toggled;
 
-		if (saveData != vec.end() && saveData->saved_time != current_timestamp) {
+		if (!saveDataIsNull && saveData->saved_time != current_timestamp) {
 			saveData->saved_time = current_timestamp;
 		}
 		else {
@@ -106,7 +107,7 @@ class $modify (PlayLayer){
 class $modify (EditLevelLayer){
 	bool init(GJGameLevel* level){
 		if(!EditLevelLayer::init(level)) return false;
-		gd::string levelKey = getLevelKey(level);
+		std::string levelKey = getLevelKey(level);
 		
 		auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
 		auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level);});
@@ -151,7 +152,7 @@ class $modify (EditLevelLayer){
 class $modify (LevelInfoLayer){
 	bool init(GJGameLevel* level, bool p1){
 		if(!LevelInfoLayer::init(level, p1)) return false;
-		gd::string levelKey = getLevelKey(level);
+		std::string levelKey = getLevelKey(level);
 
 		auto vec = Mod::get()->getSavedValue<std::vector<ToggleSaveData>>("toggle-save-data", {});
 		auto saveData = std::find_if(vec.begin(), vec.end(), [this](ToggleSaveData const& item) { return item.key == getLevelKey(m_level);});
