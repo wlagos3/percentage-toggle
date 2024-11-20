@@ -1,5 +1,3 @@
-#include "Geode/cocos/base_nodes/Layout.hpp"
-#include "Geode/cocos/cocoa/CCGeometry.h"
 #include "Geode/cocos/label_nodes/CCLabelBMFont.h"
 #include "Geode/modify/Modify.hpp"
 #include "Geode/utils/cocos.hpp"
@@ -7,43 +5,39 @@
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/LevelInfoLayer.hpp>
 #include <Geode/Geode.hpp>
+#include <matjson.hpp>
 using namespace geode::prelude;
 
 struct ToggleSaveData {
 	std::string key;
 	bool toggled;
     int saved_time;
+	ToggleSaveData(std::string k, bool t, int s)
+        : key(std::move(k)), toggled(t), saved_time(s) {}
 };
 
 template<>
 struct matjson::Serialize<std::vector<ToggleSaveData>> {
-    static std::vector<ToggleSaveData> from_json(matjson::Value const& value) {
+    static Result<std::vector<ToggleSaveData>> fromJson(matjson::Value const& value) {
         auto vec = std::vector<ToggleSaveData> {};
-        for (auto const& item : value.as_array()) {
-            vec.push_back({
-				.key = item["key"].as_string(),
-                .toggled = item["toggled"].as_bool(),
-                .saved_time = item["original_time"].as_int(),
-            });
+        for (auto const& item : value) {
+            vec.push_back(ToggleSaveData(item["key"].asString().unwrap(), item["toggled"].asBool().unwrap(), item["original_time"].asInt().unwrap()));
         }
-        return vec;
+        return Ok(vec);
     }
 
-    static matjson::Value to_json(std::vector<ToggleSaveData> const& vec) {
-        auto arr = matjson::Array {};
+    static matjson::Value toJson(std::vector<ToggleSaveData> const& vec) {
+        auto arr = matjson::Value{}.array();
         for (auto const& item : vec) {
-            arr.push_back(matjson::Object {
+            arr.push(matjson::makeObject ({
 				{"key", item.key},
                 { "toggled", item.toggled },
                 { "original_time", item.saved_time },
-            });
+            }));
         }
         return arr;
     }
 
-    static bool is_json(matjson::Value const& value) {
-        return value.is_array();
-    }
 };
 
 
@@ -85,11 +79,11 @@ class $modify (PlayLayer){
 			saveData->saved_time = current_timestamp;
 		}
 		else {
-			vec.push_back({
-				.key = levelKey,
-				.toggled = saveDataToggle,
-				.saved_time = current_timestamp
-			});
+			vec.push_back(ToggleSaveData(
+				levelKey,
+				saveDataToggle,
+				current_timestamp
+			));
 		}
 
 		if(!level->isPlatformer() && (saveDataToggle || forceEnabled)){
@@ -124,11 +118,11 @@ class $modify (EditLevelLayer){
 						saveData->toggled = !saveData->toggled;
 					}
 					else {
-						vec.push_back({
-							.key = levelKey,
-							.toggled = true,
-							.saved_time = m_level->m_timestamp
-						});
+						vec.push_back(ToggleSaveData(
+							levelKey,
+							true,
+							m_level->m_timestamp
+						));
 					}
 				Mod::get()->setSavedValue("toggle-save-data", vec);
 			 });
@@ -169,11 +163,11 @@ class $modify (LevelInfoLayer){
 						saveData->toggled = !saveData->toggled;
 					}
 					else {
-						vec.push_back({
-							.key = levelKey,
-							.toggled = true,
-							.saved_time = m_level->m_timestamp
-						});
+						vec.push_back(ToggleSaveData(
+							levelKey,
+							true,
+							m_level->m_timestamp
+						));
 					}
 				Mod::get()->setSavedValue("toggle-save-data", vec);
 			 });

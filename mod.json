@@ -1,14 +1,14 @@
 {
-  "geode": "3.1.1",
+  "geode": "4.0.0",
   "gd": {
-    "win": "2.206",
-    "mac": "2.206"
+    "win": "2.2074",
+    "mac": "2.2074"
   },
-  "version": "v1.0.0-beta.2",
+  "version": "v1.0.0-beta.3",
   "id": "zsa.percentage-toggle",
   "name": "Percentage Toggle",
   "developer": "ZSA",
-  "description": "Allows for toggling between 2.1 and 2.2 percentage calculation.",
+  "description": "Force 2.1 percentage calculation",
   "settings": {
     "force-enable": {
       "name": "Force enable 2.1 percentage",

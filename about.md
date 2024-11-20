@@ -2,7 +2,7 @@
 
 ## By [ZSA](user:6311498)
 
-Allows for toggling between 2.1 and 2.2 percentage calculation per level.
+Forces 2.1 percentage calculation per level
 
 ### Notes:
 
