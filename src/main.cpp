@@ -1,6 +1,3 @@
-#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
-#include "Geode/modify/Modify.hpp"
-#include "Geode/utils/cocos.hpp"
 #include <Geode/modify/EditLevelLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/LevelInfoLayer.hpp>
@@ -45,9 +42,7 @@ struct matjson::Serialize<std::vector<ToggleSaveData>> {
 std::string getLevelKey(GJGameLevel* level){
 	std::string levelKey;
 	if(level->m_levelID == 0){
-		std::ostringstream s;
-		s << level->m_levelName << "_" << level->m_levelRev;
-		levelKey = s.str();
+		levelKey = fmt::format("{}_{}", std::string(level->m_levelName), level->m_levelRev);
 	}
 	else{
 		levelKey = std::to_string(level->m_levelID);
@@ -189,7 +184,3 @@ class $modify (LevelInfoLayer){
 		return true;
 	}
 };
-
-
-
-
