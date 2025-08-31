@@ -1,6 +1,3 @@
-#include "Geode/cocos/label_nodes/CCLabelBMFont.h"
-#include "Geode/modify/Modify.hpp"
-#include "Geode/utils/cocos.hpp"
 #include <Geode/modify/EditLevelLayer.hpp>
 #include <Geode/modify/PlayLayer.hpp>
 #include <Geode/modify/LevelInfoLayer.hpp>
@@ -189,7 +186,3 @@ class $modify (LevelInfoLayer){
 		return true;
 	}
 };
-
-
-
-
