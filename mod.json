@@ -1,12 +1,12 @@
 {
-  "geode": "4.7.0",
+  "geode": "5.0.0",
   "gd": {
-    "win": "2.2074",
-    "mac": "2.2074",
-    "ios": "2.2074",
-    "android": "2.2074"
+    "win": "2.2081",
+    "mac": "2.2081",
+    "ios": "2.2081",
+    "android": "2.2081"
   },
-  "version": "v1.0.0-beta.3",
+  "version": "v1.0.0",
   "id": "zsa.percentage-toggle",
   "name": "Percentage Toggle",
   "developer": "ZSA",
@@ -19,11 +19,7 @@
       "default": false
     }
   },
-  "dependencies": [
-    {
-      "id": "geode.node-ids",
-      "version": "1.11.0",
-      "importance": "required"
-    }
-  ]
+  "dependencies": {
+    "geode.node-ids": ">=1.17.0"
+  }
 }
